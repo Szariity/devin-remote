@@ -1,0 +1,25 @@
+name: build ipa
+on: [push, workflow_dispatch]
+jobs:
+  ios:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: xcodegen
+        run: brew install xcodegen && xcodegen
+      - name: build unsigned .app
+        run: |
+          xcodebuild -scheme DevinRemote -configuration Release \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            -derivedDataPath build build
+      - name: package .ipa
+        run: |
+          APP=$(find build/Build/Products -name "DevinRemote.app" -type d | head -1)
+          mkdir -p Payload && cp -r "$APP" Payload/
+          zip -qr DevinRemote.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DevinRemote-ipa
+          path: DevinRemote.ipa
+          retention-days: 14

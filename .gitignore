@@ -1,0 +1,6 @@
+build/
+DerivedData/
+*.xcworkspace
+Payload/
+*.ipa
+.DS_Store

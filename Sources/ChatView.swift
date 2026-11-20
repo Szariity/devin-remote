@@ -266,7 +266,7 @@ struct PermCardView: View {
             HStack(spacing: 8) {
                 Image(systemName: "shield.fill").foregroundStyle(.yellow)
                 Text("Devin wants to run ").font(.caption).fontWeight(.bold)
-                    + Text(e.title ?? "a tool").font(.caption).fontWeight(.bold).foregroundStyle(.yellow)
+                    + Text(e.title ?? "a tool").font(.caption).fontWeight(.bold).foregroundColor(.yellow)
             }
             ForEach(Array((e.content ?? []).enumerated()), id: \.offset) { _, c in
                 if let v = c.v {

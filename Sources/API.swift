@@ -1,7 +1,8 @@
 import Foundation
 
 struct APIError: Error, LocalizedError {
-    let status: Int, let message: String
+    let status: Int
+    let message: String
     var errorDescription: String? { message }
 }
 

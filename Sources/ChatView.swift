@@ -277,15 +277,20 @@ struct PermCardView: View {
             }
             HStack(spacing: 8) {
                 ForEach(e.options ?? []) { o in
-                    Button(o.name ?? o.optionId) { onRespond(o) }
-                        .buttonStyle(.bordered)
-                        .tint((o.kind ?? "").contains("allow") ? .white : .gray)
+                    permButton(o)
                 }
             }
         }
         .padding(12)
         .background(Color.yellow.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.yellow.opacity(0.35)))
+    }
+
+    func permButton(_ o: PermOpt) -> some View {
+        let allow = (o.kind ?? "").contains("allow")
+        return Button(o.name ?? o.optionId) { onRespond(o) }
+            .buttonStyle(.bordered)
+            .tint(allow ? Color.white : Color.gray)
     }
 }
 

@@ -17,7 +17,7 @@ struct SessRow: Codable, Identifiable {
     enum CodingKeys: String, CodingKey { case title, cwd, updatedAt, status, source; case sessionId = "id" }
 }
 
-struct CloudSess: Codable, Identifiable {
+struct CloudSess: Decodable, Identifiable {
     var id: String { devinId }
     let devinId: String
     let title: String?

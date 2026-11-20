@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 struct APIError: Error, LocalizedError {
     let status: Int

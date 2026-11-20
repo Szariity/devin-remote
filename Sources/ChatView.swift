@@ -234,23 +234,7 @@ struct EntryView: View {
                 }
             }
         case "perm":
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 8) { Image(systemName: "shield.fill").foregroundStyle(.yellow)
-                    Text("Devin wants to run ").font(.caption).fontWeight(.bold) + Text(e.title ?? "a tool").font(.caption).fontWeight(.bold).foregroundStyle(.yellow) }
-                ForEach(Array((e.content ?? []).enumerated()), id: \.offset) { _, c in
-                    if let v = c.v { Text(v).font(.system(.caption, design: .monospaced)).padding(8).frame(maxWidth: .infinity, alignment: .leading).background(Color(hex: 0x17171a), in: RoundedRectangle(cornerRadius: 8)) }
-                }
-                HStack(spacing: 8) {
-                    ForEach(e.options ?? []) { o in
-                        Button(o.name ?? o.optionId) { Task { await respond(e: e, o: o) } }
-                            .buttonStyle(.bordered)
-                            .tint((o.kind ?? "").contains("allow") ? .white : .gray)
-                    }
-                }
-            }
-            .padding(12)
-            .background(Color.yellow.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.yellow.opacity(0.35)))
+            PermCardView(e: e, onRespond: { o in Task { await respond(e: e, o: o) } })
         default: EmptyView()
         }
     }
@@ -271,6 +255,37 @@ struct EntryView: View {
         if l.contains("think") { return "brain" }
         if l.contains("fetch") || l.contains("web") { return "globe" }
         return "sparkles"
+    }
+}
+
+struct PermCardView: View {
+    let e: Entry
+    let onRespond: (PermOpt) -> Void
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: "shield.fill").foregroundStyle(.yellow)
+                Text("Devin wants to run ").font(.caption).fontWeight(.bold)
+                    + Text(e.title ?? "a tool").font(.caption).fontWeight(.bold).foregroundStyle(.yellow)
+            }
+            ForEach(Array((e.content ?? []).enumerated()), id: \.offset) { _, c in
+                if let v = c.v {
+                    Text(v).font(.system(.caption, design: .monospaced)).padding(8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(hex: 0x17171a), in: RoundedRectangle(cornerRadius: 8))
+                }
+            }
+            HStack(spacing: 8) {
+                ForEach(e.options ?? []) { o in
+                    Button(o.name ?? o.optionId) { onRespond(o) }
+                        .buttonStyle(.bordered)
+                        .tint((o.kind ?? "").contains("allow") ? .white : .gray)
+                }
+            }
+        }
+        .padding(12)
+        .background(Color.yellow.opacity(0.06), in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.yellow.opacity(0.35)))
     }
 }
 
